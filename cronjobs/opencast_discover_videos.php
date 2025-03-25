@@ -105,8 +105,8 @@ class OpencastDiscoverVideos extends CronJob
                             self::parseEvent($event, $video);
                         //}
                     }
-                } else if ($event->status != 'EVENTS.EVENTS.STATUS.SCHEDULED') {
-                    // the event at least exists and is not scheduled
+                } else if ($event->status != 'EVENTS.EVENTS.STATUS.SCHEDULED' && $event->status != "EVENTS.EVENTS.STATUS.RECORDING") {
+                    // the event at least exists, and is not scheduled and not recording
                     $event_ids[] = $event->identifier;
                     $events[$event->identifier] = $event;
                 }
