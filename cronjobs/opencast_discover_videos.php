@@ -26,6 +26,9 @@ class OpencastDiscoverVideos extends CronJob
 
     public function execute($last_result, $parameters = array())
     {
+        // cope with large number of videos
+        ini_set('memory_limit', -1);
+
         /*
          - Neue Videos in OC identifizieren (die Stud.IP noch nicht kennt)
          - Eintragen der Videos und setzen der Rechte (Queue)
@@ -95,12 +98,12 @@ class OpencastDiscoverVideos extends CronJob
                         // only add for reinspection if not already scheduled
                         $video = Videos::findOneBySql("episode = ?", [$event->identifier]);
 
-                        if (empty(VideoSync::findByVideo_id($video->id))) {
+                        //if (empty(VideoSync::findByVideo_id($video->id))) {
                             echo 'schedule video for re-inspection, archive versions differ: ' . $video->id . ' (' . $video->title . ') '
                                 . ' Local version: '. $local_events[$event->identifier] . ', OC version: '. $event->archive_version . "\n";
 
                             self::parseEvent($event, $video);
-                        }
+                        //}
                     }
                 } else if ($event->status != 'EVENTS.EVENTS.STATUS.SCHEDULED') {
                     // the event at least exists and is not scheduled
@@ -158,7 +161,6 @@ class OpencastDiscoverVideos extends CronJob
          * RUNNING wird immer neu inspiziert
          * FAILED wird nur jede Stunde neu inspiziert
          * Das scheduled Feld wird genutzt, um Dinge für die Zukunft zu planen
-         */
         $videos = Videos::findBySql(
             "LEFT JOIN oc_video_sync AS ovs ON (ovs.video_id = oc_video.id AND ovs.type = 'video')
             WHERE ovs.video_id IS NULL AND (preview IS NULL OR available = 0) AND is_livestream = 0"
@@ -172,6 +174,7 @@ class OpencastDiscoverVideos extends CronJob
                 echo 'Could not found video in Opencast: '. $video->episode ."\n";
             }
         }
+         */
 
         // search for all inaccessible videos in course playlists with no scheduled task and add them for reinspection
         $videos = PlaylistVideos::findBySql('oc_playlist_video.available = 0');
@@ -241,7 +244,7 @@ class OpencastDiscoverVideos extends CronJob
                 }
             } else {
                 $video->state = 'failed';
-                $video->version   = $event->archive_version;
+                $video->version   = $event->archive_version ?? 0;
                 $video->is_livestream = 0;
             }
         }
