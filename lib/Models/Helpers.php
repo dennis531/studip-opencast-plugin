@@ -341,6 +341,8 @@ class Helpers
 
     public static function notifyUsers($eventType, $event, $video)
     {
+        return;
+
         // get the first course the video is assigned to
         if (!empty($video->playlists) && !empty($video->playlists[0]->courses)) {
             $course_id = $video->playlists[0]->courses[0]->id;
