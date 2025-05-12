@@ -22,6 +22,7 @@
             <colgroup>
                 <col v-if="canEdit && videoSortMode" style="width: 20px">
                 <col v-if="showCheckbox" style="width: 30px">
+                <col style="width: 40px">
                 <col style="width: 119px">
                 <col>
                 <col style="width: 180px" class="responsive-hidden">
@@ -38,6 +39,9 @@
                             :checked="selectAll"
                             @click.stop="toggleAll"
                             :title="$gettext('Alle Videos auswählen')">
+                    </th>
+                    <th class="sortasc">
+                        <a href="#">#</a>
                     </th>
                     <th data-sort="false">{{ $gettext('Video') }}</th>
                     <th @click="setSort('title')" :class="sortClasses('title')">
@@ -84,6 +88,7 @@
                 <template #item="{element, index}">
                     <VideoRow
                         :event="element"
+                        :index="index"
                         :numberOfColumns="numberOfColumns"
                         :selectedVideos="selectedVideos"
                         @toggle="toggleVideo"
@@ -298,7 +303,7 @@ export default {
         ]),
 
         numberOfColumns() {
-            return 7 - (this.showCheckbox ? 0 : 1) - (this.showActions ? 0 : 1);
+            return 8 - (this.showCheckbox ? 0 : 1) - (this.showActions ? 0 : 1);
         },
 
         showCheckbox() {

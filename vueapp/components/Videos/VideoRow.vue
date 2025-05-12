@@ -18,6 +18,10 @@
         <td v-else-if="userHasSelectableVideos && canUpload">
         </td>
 
+        <td>
+            {{ index + 1 }}
+        </td>
+
         <td class="oc--playercontainer">
             <template v-if="isLivestream">
                 <a href="#" :disabled="!livestreamInfo.isLive" @click.prevent="redirectAction(`/livestream/` + event.token)" target="_blank">
@@ -195,6 +199,10 @@ export default {
 
     props: {
         event: Object,
+        index: {
+            type: Number,
+            required: true
+        },
         numberOfColumns: {
             type: Number,
             required: true

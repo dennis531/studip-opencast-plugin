@@ -38,6 +38,20 @@
                         {{ $gettext('Schlagworte') }}
                         <TagBar :taggable="eplaylist" @update="updateTags" />
                     </label>
+
+                    <label>
+                        {{ $gettext('Standardsortierung') }}
+                        <div>
+                            <select>
+                                <option>Eigene Sortierung</option>
+                                <option>Datum (neuste zuerst)</option>
+                                <option>Datum (älteste zuerst)</option>
+                                <option>Titel (alphabetisch)</option>
+                                <option>Titel (alphabetisch umgekehrt)</option>
+                            </select>
+                        </div>
+
+                    </label>
                 </form>
             </template>
         </StudipDialog>
